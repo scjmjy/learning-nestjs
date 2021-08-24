@@ -6,14 +6,12 @@ import {
     HttpStatus,
     Param,
     Post,
-    Req,
     UseGuards,
     UsePipes,
 } from '@nestjs/common';
-import { Request } from 'express';
-import { RolesGuard } from 'src/common/guards/roles.guard';
-import { ParseIntPipe } from 'src/common/pipes/parse-int.pipe';
-import { TestPipe } from 'src/common/pipes/test-pipe.pipe';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { ParseIntPipe } from '@/common/pipes/parse-int.pipe';
+import { TestPipe } from '@/common/pipes/test-pipe.pipe';
 import { CreateCatDto } from './cat.dto';
 import { Cat } from './cat.interface';
 import { CatsService } from './cats.service';
