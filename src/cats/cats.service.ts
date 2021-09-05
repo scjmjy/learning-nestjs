@@ -1,11 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Cat } from './cat.interface';
+import { Injectable } from '@nestjs/common';
+import { CreateCatDto } from './cat.dto';
+import { CatEntity } from './cat.entity';
 
 @Injectable()
 export class CatsService {
-    private readonly cats: Cat[] = [];
-    findAll(query): Cat[] {
-        return this.cats;
+    findAll() {
+        return CatEntity.find();
     }
 
     /**
@@ -13,23 +13,19 @@ export class CatsService {
      * @param id
      * @returns
      *
-     * @throws {RangeError}
      */
-    findById(id: number): Cat {
-        if (id >= this.cats.length) {
-            // throw new Error('Out of Range');
-            throw new HttpException('Out of Range', HttpStatus.OK);
-        }
-        return this.cats[id];
+    findById(id: number) {
+        return CatEntity.findOne(id);
     }
 
     /**
      *
      * @param cat
-     * @returns id of new created Cat
+     * @returns new created Cat
      */
-    create(cat: Cat): number {
-        this.cats.push(cat);
-        return this.cats.length - 1;
+    create(cat: CreateCatDto) {
+        const newCat = new CatEntity();
+        Object.assign(newCat, cat);
+        return newCat.save();
     }
 }

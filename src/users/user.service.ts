@@ -3,18 +3,22 @@ https://docs.nestjs.com/providers#services
 */
 
 import { Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { AxiosResponse } from 'axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { CreateOneUserDto } from './createOne.dto';
 import { UpdateOneUserDto } from './updateOne.dto';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class UserService {
     constructor(
         private conn: Connection,
-        @InjectRepository(User)
-        private userRepo: Repository<User>,
+        @InjectRepository(UserEntity)
+        private userRepo: Repository<UserEntity>,
+        private httpService: HttpService,
     ) {}
 
     async createOne(user: CreateOneUserDto) {
@@ -56,12 +60,18 @@ export class UserService {
     //     return this.userRepo.find();
     // }
 
-    findOne(id: string | number): Promise<User> {
+    findOne(id: string | number): Promise<UserEntity> {
         // return this.conn.getRepository(User).findOne(id);
         return this.userRepo.findOne(id);
     }
 
-    findManyByIds(ids: (string | number)[]): Promise<User[]> {
+    findOneHttp(id: string | number): Observable<AxiosResponse<UserEntity>> {
+        // return this.conn.getRepository(User).findOne(id);
+        // return this.userRepo.findOne(id);
+        return this.httpService.get('http://localhost:3000/user/find/' + id);
+    }
+
+    findManyByIds(ids: (string | number)[]): Promise<UserEntity[]> {
         return this.userRepo.findByIds(ids);
     }
 
